@@ -5,9 +5,12 @@
 package com.sales.market.service;
 
 import com.sales.market.model.ItemInstance;
+import com.sales.market.model.ItemInstanceStatus;
 import com.sales.market.repository.GenericRepository;
 import com.sales.market.repository.ItemInstanceRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> implements ItemInstanceService {
@@ -32,5 +35,9 @@ public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> im
             itemService.save(itemInstance.getItem());
         }
         return super.bunchSave(itemInstance);
+    }
+    @Override
+    public List<ItemInstance> countItemInstances(ItemInstanceStatus itemInstanceStatus){
+        return repository.countItemInstances(itemInstanceStatus);
     }
 }

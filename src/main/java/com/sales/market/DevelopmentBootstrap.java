@@ -120,20 +120,21 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
 
 
     private void persistItemInstances(Item maltinItem) {
-        ItemInstance maltinItem1 = createItem(maltinItem, "SKU-77721106006158", 5D);
-        ItemInstance maltinItem2 = createItem(maltinItem, "SKU-77721106006159", 5D);
-        ItemInstance maltinItem3 = createItem(maltinItem, "SKU-77721106006160", 5D);
-        ItemInstance maltinItem4 = createItem(maltinItem, "SKU-77721106006161", 5D);
+        ItemInstance maltinItem1 = createItem(maltinItem, "SKU-77721106006158", 5D,ItemInstanceStatus.AVAILABLE);
+        ItemInstance maltinItem2 = createItem(maltinItem, "SKU-77721106006159", 5D,ItemInstanceStatus.SOLD);
+        ItemInstance maltinItem3 = createItem(maltinItem, "SKU-77721106006160", 5D,ItemInstanceStatus.AVAILABLE);
+        ItemInstance maltinItem4 = createItem(maltinItem, "SKU-77721106006161", 5D,ItemInstanceStatus.SCREWED);
         itemInstanceService.save(maltinItem1);
         itemInstanceService.save(maltinItem2);
         itemInstanceService.save(maltinItem3);
         itemInstanceService.save(maltinItem4);
     }
 
-    private ItemInstance createItem(Item maltinItem, String sku, double price) {
+    private ItemInstance createItem(Item maltinItem, String sku, double price,ItemInstanceStatus itemInstanceStatus) {
         ItemInstance itemInstance = new ItemInstance();
         itemInstance.setItem(maltinItem);
         itemInstance.setFeatured(true);
+        itemInstance.setItemInstanceStatus(itemInstanceStatus);
         itemInstance.setPrice(price);
         itemInstance.setIdentifier(sku);
         return itemInstance;
