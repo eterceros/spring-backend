@@ -1,13 +1,10 @@
-package com.sales.market.model.purchases;
+package com.sales.market.dto.purchaseDto;
 
-import com.sales.market.dto.purchaseDto.ProviderDto;
-import com.sales.market.model.ModelBase;
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.Provider;
+import org.modelmapper.ModelMapper;
 
-import javax.persistence.Entity;
-
-@Entity
-public class Provider extends ModelBase<ProviderDto> {
-
+public class ProviderDto extends DtoBase<Provider> {
     private String name;
 
     private String code;
