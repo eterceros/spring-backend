@@ -4,8 +4,13 @@
 
 package com.sales.market.model;
 
+import com.sales.market.model.purchases.ProviderItem;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 public class Item extends ModelBase {
