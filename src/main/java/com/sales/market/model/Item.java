@@ -14,8 +14,7 @@ public class Item extends ModelBase {
     private Byte[] image;
     @OneToOne(targetEntity = SubCategory.class)
     private SubCategory subCategory;
-    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REMOVE})
+    @OneToMany(mappedBy = "item")
     private List<ItemInstance> itemInstances;
 
     public List<ItemInstance> getItemInstances() {

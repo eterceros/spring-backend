@@ -5,12 +5,11 @@
 package com.sales.market.service;
 
 import com.sales.market.dto.ItemInstanceDto;
-import com.sales.market.model.Item;
-import com.sales.market.model.ItemInstance;
-import com.sales.market.model.ItemInstanceStatus;
-import com.sales.market.model.MovementType;
+import com.sales.market.model.*;
 import com.sales.market.repository.GenericRepository;
 import com.sales.market.repository.ItemInstanceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +19,7 @@ import java.util.List;
 public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> implements ItemInstanceService {
     private final ItemInstanceRepository repository;
     private final ItemService itemService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ItemInstanceServiceImpl(ItemInstanceRepository repository, ItemService itemService) {
         this.repository = repository;
@@ -55,10 +55,10 @@ public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> im
     public int countItemInstancesStatus(ItemInstanceStatus itemInstanceStatus, Item item){
         return repository.countItemInstancesStatus(itemInstanceStatus,item);
     }
-    public double countPriceItemInstancesStatus(Item item){
+    public double countPriceItemInstancesStatus(Item item,ItemInstanceStatus itemInstanceStatus){
         double totalPrice=0;
-       for(ItemInstance itemInstance1:findItemInstancesByItem(item)){
-               totalPrice=totalPrice+itemInstance1.getPrice();
+       for(ItemInstance itemInstance1:findItemInstancesByItem(item,itemInstanceStatus)){
+               totalPrice=totalPrice+itemInstance1.getPrice().intValue();
 
        }
        return totalPrice;
@@ -67,7 +67,7 @@ public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> im
     public String Skus(Item item,BigDecimal quantity){
         String skus="";
         int cont=0;
-            for(ItemInstance itemInstance:findItemInstancesByItem(item)){
+            for(ItemInstance itemInstance:findItemInstancesByItem(item,ItemInstanceStatus.SOLD)){
                 if(cont<quantity.intValue()){
                         skus=skus+itemInstance.getIdentifier()+",";
                         cont=cont+1;
@@ -76,21 +76,81 @@ public class ItemInstanceServiceImpl extends GenericServiceImpl<ItemInstance> im
         return skus;
     }
 
-    public List<ItemInstance> findItemInstancesByItem(Item item){
-        return repository.findItemInstancesByItem(item,ItemInstanceStatus.AVAILABLE);
+    public List<ItemInstance> findItemInstancesByItem(Item item,ItemInstanceStatus itemInstanceStatus){
+        return repository.findItemInstancesByItem(item,itemInstanceStatus);
     }
-
-/*
-
-    public void update(Item model,int quantity) {
-        int cont=0;
-        for (ItemInstance itemInstance:findItemInstancesByItem(model)){
-            if(cont<quantity){
-                itemInstance.setItemInstanceStatus(ItemInstanceStatus.SOLD);
+    public void updateItemInstaceBuy(Long id,BigDecimal price,String skus,BigDecimal quantity){
+        Item item=itemService.findById(id);
+        String[]skuslist=skus.split(",");
+        if(quantity.intValue()==skuslist.length){
+            for (int i=0;i<skuslist.length;i++){
+                ItemInstance itemInstance=new ItemInstance();
+                itemInstance.setItem(item);
+                itemInstance.setIdentifier(skuslist[i]);
+                itemInstance.setFeatured(false);
+                itemInstance.setPrice(price);
+                itemInstance.setItemInstanceStatus(ItemInstanceStatus.AVAILABLE);
                 repository.save(itemInstance);
             }
+        }else {
+            logger.error("La cantidad y el skus deben de ser igual ya que un sku es unico");
+        }
+    }
+    public void updateItemInstanceRemoved(Item item,String skus, BigDecimal quantity){
+        String[]skuslist=skus.split(",");
+        if(quantity.intValue()==skuslist.length){
+            for (int i=0;i<skuslist.length;i++){
+                if(ifExistsItemInstance(skuslist[i],item)==true){
+                    ItemInstance itemInstance=findById(findSkus(skuslist[i],item));
+                    itemInstance.setIdentifier((skuslist[i]));
+                    itemInstance.setFeatured(true);
+                    itemInstance.setItemInstanceStatus(ItemInstanceStatus.DISCARDED);
+                    repository.save(itemInstance);
+                }
+            }
+        }else {
+            logger.error("La cantidad y el skus deben de ser igual ya que un sku es unico");
+        }
+    }
+    public Long findSkus(String sku,Item item){
+        Long id=0L;
+        List<ItemInstance>itemInstanceList=findItemInstancesByItem(item,ItemInstanceStatus.AVAILABLE);
+        for(ItemInstance itemInstance:itemInstanceList){
+            if(itemInstance.getIdentifier().equals(sku)) {
+                id = itemInstance.getId();
+            }
+
+        }
+        return id;
+    }
+    public boolean ifExistsItemInstance(String sku,Item item){
+        boolean exists=false;
+        List<ItemInstance>itemInstanceList=findItemInstancesByItem(item,ItemInstanceStatus.AVAILABLE);
+        for(ItemInstance itemInstance:itemInstanceList){
+            if(itemInstance.getIdentifier().equals(sku)){
+                exists=true;
+            }
+
+        }
+
+        return exists;
+    }
+    public void updateItemInstanceSale(Item item,String skus, BigDecimal quantity){
+        String[]skuslist=skus.split(",");
+        if(quantity.intValue()==skuslist.length){
+            for (int i=0;i<skuslist.length;i++){
+                if(ifExistsItemInstance(skuslist[i],item)==true){
+                    ItemInstance itemInstance=findById(findSkus(skuslist[i],item));
+                    itemInstance.setIdentifier((skuslist[i]));
+                    itemInstance.setFeatured(true);
+                    itemInstance.setItemInstanceStatus(ItemInstanceStatus.SOLD);
+                    repository.save(itemInstance);
+                }
+            }
+        }else {
+            logger.error("La cantidad y el skus deben de ser igual ya que un sku es unico");
         }
     }
 
-     */
+
 }

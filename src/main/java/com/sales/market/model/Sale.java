@@ -9,10 +9,11 @@ import com.sales.market.dto.SaleDto;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Sale extends ModelBase<SaleDto> {
-    @OneToOne(optional = false)
+    @OneToOne()
     private Employee employee;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -20,7 +21,19 @@ public class Sale extends ModelBase<SaleDto> {
     private Date date;
 
     private String description;
+
     private String image;
+
+    @OneToMany(mappedBy = "sale")
+    private List<SaleItemDetail> saleItemDetails;
+
+    public List<SaleItemDetail> getSaleItemDetails() {
+        return saleItemDetails;
+    }
+
+    public void setSaleItemDetails(List<SaleItemDetail> saleItemDetails) {
+        this.saleItemDetails = saleItemDetails;
+    }
 
     public Employee getEmployee() {
         return employee;

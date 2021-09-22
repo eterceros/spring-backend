@@ -3,6 +3,8 @@ package com.sales.market.dto;
 import com.sales.market.model.ItemInstance;
 import com.sales.market.model.ItemInstanceStatus;
 
+import java.math.BigDecimal;
+
 public class ItemInstanceDto extends DtoBase<ItemInstance> {
     private ItemDto item;
     private String identifier;// sku
@@ -10,7 +12,7 @@ public class ItemInstanceDto extends DtoBase<ItemInstance> {
     private Boolean featured = Boolean.FALSE;
 
     // todo generalmente se usa BigDecimal
-    private Double price;
+    private BigDecimal price;
     private ItemInstanceStatus itemInstanceStatus;
 
     public ItemInstanceStatus getItemInstanceStatus() {
@@ -45,11 +47,11 @@ public class ItemInstanceDto extends DtoBase<ItemInstance> {
         this.featured = featured;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

@@ -7,5 +7,6 @@ package com.sales.market.model;
 public enum ItemInstanceStatus {
     SOLD,
     AVAILABLE,
-    SCREWED
+    SCREWED,
+    DISCARDED
 }

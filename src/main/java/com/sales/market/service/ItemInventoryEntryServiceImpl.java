@@ -5,7 +5,6 @@ import com.sales.market.repository.GenericRepository;
 import com.sales.market.repository.ItemInventoryEntryRepository;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 
 @Service
 public class ItemInventoryEntryServiceImpl extends GenericServiceImpl<ItemInventoryEntry> implements ItemInventoryEntryService {
@@ -30,17 +29,21 @@ public class ItemInventoryEntryServiceImpl extends GenericServiceImpl<ItemInvent
     @Override
     public ItemInventoryEntry save(ItemInventoryEntry model) {
         ItemInventory itemInventory=itemInventoryService.findById(model.getItemInventory().getId());
-        model.setItemInventory(itemInventory);
-        model.setItemInstanceSkus(itemInstanceService.Skus(itemInventory.getItem(),model.getQuantity()));
-        model.setMovementType(model.getMovementType());
-        movementType(model.getMovementType(),model.getQuantity(),itemInventory);
-        return super.save(model);
-    }
-    public void movementType(MovementType movementType,BigDecimal quantity,ItemInventory itemInventory){
-        if(movementType.name().equals(MovementType.SALE)){
-         //   itemInstanceService.update(itemInventory.getItem(),quantity.intValue());
-            itemInventoryService.save(itemInventory);
+        if(model.getMovementType()==MovementType.BUY){
+           itemInstanceService.updateItemInstaceBuy(itemInventory.getItem().getId(),model.getPrice(),model.getItemInstanceSkus(),model.getQuantity());
+           itemInventoryService.updateItemInventoryBuy(itemInventory);
+           model.setItemInventory(itemInventory);
         }
-
+        if(model.getMovementType()==MovementType.REMOVED){
+            itemInstanceService.updateItemInstanceRemoved(itemInventory.getItem(),model.getItemInstanceSkus(),model.getQuantity());
+            itemInventoryService.updateItemInventoryRemovedAndSale(itemInventory);
+            model.setItemInventory(itemInventory);
+        }
+        if (model.getMovementType()==MovementType.SALE){
+            itemInstanceService.updateItemInstanceSale(itemInventory.getItem(),model.getItemInstanceSkus(),model.getQuantity());
+            itemInventoryService.updateItemInventoryRemovedAndSale(itemInventory);
+            model.setItemInventory(itemInventory);
+        }
+        return super.save(model);
     }
 }

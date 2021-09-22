@@ -38,17 +38,26 @@ public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> 
         Item item=itemService.findById(model.getItem().getId());
         model.setItem(item);
         model.setStockQuantity(BigDecimal.valueOf(itemInstanceService.countItemInstancesStatus(ItemInstanceStatus.AVAILABLE, model.getItem())));
-        model.setTotalPrice(BigDecimal.valueOf(itemInstanceService.countPriceItemInstancesStatus(model.getItem())));
+        model.setTotalPrice(BigDecimal.valueOf(itemInstanceService.countPriceItemInstancesStatus(model.getItem(),ItemInstanceStatus.AVAILABLE)));
         return super.save(model);
 
     }
 
-    @Override
-    public ItemInventory saveAndFlush(ItemInventory model) {
-        Item item = itemService.findById(model.getItem().getId());
+    public void updateItemInventoryRemovedAndSale(ItemInventory model){
+        double AvailableDiscared=itemInstanceService.countPriceItemInstancesStatus(model.getItem(),ItemInstanceStatus.AVAILABLE)+
+                itemInstanceService.countPriceItemInstancesStatus(model.getItem(),ItemInstanceStatus.DISCARDED);
+        model.setStockQuantity(BigDecimal.valueOf(itemInstanceService.countItemInstancesStatus(ItemInstanceStatus.AVAILABLE, model.getItem())));
+        model.setTotalPrice(BigDecimal.valueOf(AvailableDiscared));
+        repository.save(model);
 
-        return super.saveAndFlush(model);
     }
+    public void updateItemInventoryBuy(ItemInventory model){
+        model.setStockQuantity(BigDecimal.valueOf(itemInstanceService.countItemInstancesStatus(ItemInstanceStatus.AVAILABLE, model.getItem())));
+        model.setTotalPrice(BigDecimal.valueOf(itemInstanceService.countPriceItemInstancesStatus(model.getItem(),ItemInstanceStatus.AVAILABLE)));
+        repository.save(model);
+
+    }
+
 
     @Override
     public List<ItemInventory> getItemsLowerBoundery() {

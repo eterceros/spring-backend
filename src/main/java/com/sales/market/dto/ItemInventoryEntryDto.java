@@ -10,8 +10,17 @@ import java.math.BigDecimal;
 public class ItemInventoryEntryDto extends DtoBase<ItemInventoryEntry> {
     private ItemInventoryDto itemInventory;
     private MovementType movementType;
-    private int quantity;
+    private BigDecimal quantity;
     private String itemInstanceSkus;
+    private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
     public ItemInventoryDto getItemInventory() {
         return itemInventory;
@@ -29,11 +38,11 @@ public class ItemInventoryEntryDto extends DtoBase<ItemInventoryEntry> {
         this.movementType = movementType;
     }
 
-    public int getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 

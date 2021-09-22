@@ -2,11 +2,12 @@
  * @author: Edson A. Terceros T.
  */
 package com.sales.market.model;
+
 import com.sales.market.dto.ItemInventoryEntryDto;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class ItemInventoryEntry extends ModelBase<ItemInventoryEntryDto> {
@@ -14,8 +15,28 @@ public class ItemInventoryEntry extends ModelBase<ItemInventoryEntryDto> {
     @ManyToOne(optional = false)
     private ItemInventory itemInventory;
     private MovementType movementType;
-    private BigDecimal quantity; // represent sale or buy instances quantity
-    private String itemInstanceSkus; //represents a list of the sku of the involved item instances
+    private BigDecimal quantity;
+    private String itemInstanceSkus;
+    private BigDecimal price;
+
+    @OneToMany(mappedBy = "itemInventoryEntry")
+    private List<SaleItemDetail> saleItemDetails;
+
+    public List<SaleItemDetail> getSaleItemDetails() {
+        return saleItemDetails;
+    }
+
+    public void setSaleItemDetails(List<SaleItemDetail> saleItemDetails) {
+        this.saleItemDetails = saleItemDetails;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
     public ItemInventory getItemInventory() {
         return itemInventory;
@@ -49,18 +70,4 @@ public class ItemInventoryEntry extends ModelBase<ItemInventoryEntryDto> {
         this.itemInstanceSkus = itemInstanceSkus;
     }
 
-/*
-    Take into account sku cannot be duplicated
-    In the service make possible:
-       register buy item instances -> Si no existe el producto crearlo, registrar instancias,
-                                        crear y actualizar el ItemInventory correspondiente con sus totalizados
-                                        Generar los ItemInventoryEntry para reflejar la operacion de entrada o salida
-                                         de almacen
-
-       vender un producto
-       desechar un producto similar a una venta pero a costo 0. Debe reflejar el totalizado correctamente de
-       ItemInventory
-
-       Debe haber tests unitarios que muestren escenarios para estas operaciones en casos de exito y de error.
-    */
 }

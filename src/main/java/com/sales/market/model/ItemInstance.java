@@ -7,6 +7,7 @@ package com.sales.market.model;
 import com.sales.market.dto.ItemInstanceDto;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "UK_ITEMINSTANCE_IDENTIFIER", columnNames = {"identifier"})})
@@ -19,11 +20,8 @@ public class ItemInstance extends ModelBase<ItemInstanceDto> {
 
     private Boolean featured = Boolean.FALSE;
 
-    // todo generalmente se usa BigDecimal
-    private Double price;
-    // todo estados AVAILABLE, SOLD, MAINTENANCE, ON_TRANSPORTATION
-    // private ItemInstanceState itemInstanceState;
-    // todo agregar totalCost
+    private BigDecimal price;
+
 
     private ItemInstanceStatus itemInstanceStatus;
 
@@ -51,11 +49,11 @@ public class ItemInstance extends ModelBase<ItemInstanceDto> {
         this.identifier = identifier;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

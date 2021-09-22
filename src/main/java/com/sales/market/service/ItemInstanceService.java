@@ -14,8 +14,8 @@ import java.util.List;
 public interface ItemInstanceService extends GenericService<ItemInstance> {
     List<ItemInstance> findByItemInstanceStatus(ItemInstanceStatus itemInstanceStatus);
     int countItemInstancesStatus(ItemInstanceStatus itemInstanceStatus, Item item);
-    double countPriceItemInstancesStatus(Item item);
-    List<ItemInstance> findItemInstancesByItem(Item item);
+    double countPriceItemInstancesStatus(Item item,ItemInstanceStatus itemInstanceStatus);
+    List<ItemInstance> findItemInstancesByItem(Item item,ItemInstanceStatus itemInstanceStatus);
    // void update(Item model,int quantity);
     //String Skus(Item item, BigDecimal bigDecimal, BigDecimal quantity);
 }
