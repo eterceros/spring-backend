@@ -6,6 +6,15 @@ public class ItemDto extends DtoBase<Item> {
     private String name;
     private String code;
     private Byte[] image;
+    private Long subCategoryId;
+
+    public Long getSubCategoryId() {
+        return subCategoryId;
+    }
+
+    public void setSubCategoryId(Long subCategoryId) {
+        this.subCategoryId = subCategoryId;
+    }
 
     public String getName() {
         return name;
