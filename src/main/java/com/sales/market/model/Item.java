@@ -4,8 +4,8 @@
 
 package com.sales.market.model;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Item extends ModelBase {
@@ -14,6 +14,17 @@ public class Item extends ModelBase {
     private Byte[] image;
     @OneToOne(targetEntity = SubCategory.class)
     private SubCategory subCategory;
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REMOVE})
+    private List<ItemInstance> itemInstances;
+
+    public List<ItemInstance> getItemInstances() {
+        return itemInstances;
+    }
+
+    public void setItemInstances(List<ItemInstance> itemInstances) {
+        this.itemInstances = itemInstances;
+    }
 
     public String getName() {
         return name;
