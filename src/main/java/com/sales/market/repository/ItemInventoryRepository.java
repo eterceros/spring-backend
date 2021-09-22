@@ -1,0 +1,16 @@
+package com.sales.market.repository;
+
+import com.sales.market.model.ItemInventory;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+public interface ItemInventoryRepository extends GenericRepository<ItemInventory> {
+    @Query("SELECT items FROM ItemInventory items"
+            +" WHERE items.stockQuantity <= items.lowerBoundThreshold")
+    List<ItemInventory> geItemsLowerBoundery();
+    @Query("SELECT items FROM ItemInventory items"
+            +" WHERE items.stockQuantity >= items.upperBoundThreshold")
+    List<ItemInventory> geItemsUpperBoundery();
+
+}

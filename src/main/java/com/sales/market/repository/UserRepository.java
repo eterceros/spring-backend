@@ -1,13 +1,16 @@
 package com.sales.market.repository;
 
 import com.sales.market.model.User;
+import org.hibernate.sql.Select;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import com.sales.market.model.RoleType;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends GenericRepository<User> {
@@ -30,4 +33,7 @@ public interface UserRepository extends GenericRepository<User> {
     @Query(value = "FROM User user INNER JOIN FETCH user.roles WHERE user.enabled = true AND user.system = false",
             countQuery = "SELECT COUNT(user.id) FROM User user WHERE user.enabled = true AND user.system = false")
     Page<User> findAllWithRoles(Pageable pageable);
+
+    @Query("Select user FROM User user inner join fetch user.roles roles where roles.name=:name")
+    List<User> getUsersSupervisor(String name);
 }
