@@ -139,4 +139,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
         }
         return userRepository.save(user);
     }
+
+    public List<User> findUsersSupervisor() {
+        return userRepository.getUsersSupervisor(RoleType.SUPERVISOR.getType());
+    }
 }
