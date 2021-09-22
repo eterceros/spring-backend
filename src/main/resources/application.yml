@@ -1,11 +1,11 @@
 spring:
   mail:
-    test-connection: true
+   # test-connection: true
     host: smtp.gmail.com
     #host: m.outlook.com
     port: 587
-    username: costasyuli0@gmail.com
-    password: diosesamor.comyu1234
+    username: costasyuli0@mail.com
+    password: di4
     properties:
       mail:
         smtp:

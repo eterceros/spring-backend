@@ -16,6 +16,5 @@ public interface ItemInstanceService extends GenericService<ItemInstance> {
     int countItemInstancesStatus(ItemInstanceStatus itemInstanceStatus, Item item);
     double countPriceItemInstancesStatus(Item item,ItemInstanceStatus itemInstanceStatus);
     List<ItemInstance> findItemInstancesByItem(Item item,ItemInstanceStatus itemInstanceStatus);
-   // void update(Item model,int quantity);
-    //String Skus(Item item, BigDecimal bigDecimal, BigDecimal quantity);
+  void   updateItemInstaceBuy(Long id,BigDecimal price,String skus,BigDecimal quantity);
 }

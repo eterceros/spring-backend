@@ -51,6 +51,7 @@ public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> 
         repository.save(model);
 
     }
+    @Override
     public void updateItemInventoryBuy(ItemInventory model){
         model.setStockQuantity(BigDecimal.valueOf(itemInstanceService.countItemInstancesStatus(ItemInstanceStatus.AVAILABLE, model.getItem())));
         model.setTotalPrice(BigDecimal.valueOf(itemInstanceService.countPriceItemInstancesStatus(model.getItem(),ItemInstanceStatus.AVAILABLE)));
