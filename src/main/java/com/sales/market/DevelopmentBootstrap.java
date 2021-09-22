@@ -87,21 +87,23 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     private void initializeEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         if (employees.isEmpty()) {
-            createEmployee("Edson", "Terceros", "edsonariel@gmail.com", false);
-            createEmployee("Ariel", "Terceros", "ariel@gmail.com", false);
-            createEmployee("System", "", "edson@gmail.com", true);
+            createEmployee("Edson", "Terceros", "edsonariel@gmail.com", false,1l);
+            createEmployee("Ariel", "Terceros", "ariel@gmail.com", false,2l);
+            createEmployee("System", "", "edson@gmail.com", true,1l);
+            createEmployee("Henry", "Claros", "cardenasyuli36@gmail.com", false, 3L);
+            createEmployee("Ernesto", "Costas", "inflabumss@gmail.com", true, 3L);
         }
     }
 
-    private void createEmployee(String firstName, String lastName, String email, boolean system) {
+    private void createEmployee(String firstName, String lastName, String email, boolean system,Long idRole) {
         Employee employee = new Employee();
         employee.setFirstName(firstName);
         employee.setLastName(lastName);
         employeeRepository.save(employee);
-        createUser(email, employee, system);
+        createUser(email, employee, system,idRole);
     }
 
-    private void createUser(String email, Employee employee, boolean system) {
+    private void createUser(String email, Employee employee, boolean system,Long idRole) {
         User user = new User();
         Role role = new Role();
         HashSet<Role> roles = new HashSet<>();
@@ -112,7 +114,7 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         user.setPassword("$2a$10$XURPShQNCsLjp1ESc2laoObo9QZDhxz73hJPaEv7/cBha4pk0AgP.");
         user.setEmployee(employee);
 
-        role.setId(1L);
+        role.setId(idRole);
         roles.add(role);
         user.setRoles(roles);
         userService.save(user);
