@@ -3,10 +3,7 @@ package com.sales.market.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sales.market.dto.*;
 import com.sales.market.model.User;
-import com.sales.market.service.EmailService;
-import com.sales.market.service.GenericService;
-import com.sales.market.service.TokenService;
-import com.sales.market.service.UserService;
+import com.sales.market.service.*;
 import io.jsonwebtoken.JwtException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +30,15 @@ public class UserController extends GenericController<User, UserDto> {
     private final TokenService tokenService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
+    private final ItemInventoryServiceImpl itemInventoryService;
 
     public UserController(UserService userService, TokenService tokenService, EmailService emailService,
-            AuthenticationManager authenticationManager) {
+                          AuthenticationManager authenticationManager, ItemInventoryServiceImpl itemInventoryService) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
+        this.itemInventoryService = itemInventoryService;
     }
 
     @PostMapping("/users/employee")
@@ -195,4 +194,35 @@ public class UserController extends GenericController<User, UserDto> {
         return super.findModelById(id);
     }
 
+    @GetMapping("/usersSupervisor")
+    public List<UserDto> getAll() {
+        return toDto(userService.findUsersSupervisor());
+    }
+
+    @GetMapping("/sendUsersSupervisorUpperBound")
+    public ResponseEntity<Object> sendMessageUpperBoundUserSupervisor()throws IOException{
+        ResponseEntity<Object> responseEntity = null;
+        if(itemInventoryService.getItemsUpperBoundery().size()>0){
+            itemInventoryService.sendMessageUpperBoundThreshold();
+            responseEntity = new ResponseEntity<>(new OperationResultDto<>("messages.upper"),
+                    HttpStatus.OK);
+        }else{
+            responseEntity = new ResponseEntity<>(new OperationResultDto<>("messages.upper.item"),
+                    HttpStatus.OK);
+        }
+        return  responseEntity;
+    }
+    @GetMapping("/sendUsersSupervisorLowerBound")
+    public ResponseEntity<Object> sendMessageLowerBoundUserSupervisor()throws IOException{
+        ResponseEntity<Object> responseEntity = null;
+        if(itemInventoryService.getItemsLowerBoundery().size()>0){
+            itemInventoryService.sendMessageLowerBoundThreshold();
+            responseEntity = new ResponseEntity<>(new OperationResultDto<>("messages.lower"),
+                    HttpStatus.OK);
+        }else{
+            responseEntity = new ResponseEntity<>(new OperationResultDto<>("messages.lower.item"),
+                    HttpStatus.OK);
+        }
+        return  responseEntity;
+    }
 }
